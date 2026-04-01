@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AdminLogin from "./pages/admin/AdminLogin";
 import { useState } from "react";
 import { useSettings } from "./context/SettingsContext";
 import { useUser } from "./context/UserContext";
@@ -64,20 +63,21 @@ function PublicLayout() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/admin" element={<AdminLogin />} />
-      <Route path="/admin" element={<AdminLogin />} />
-        <Route path="dashboard"       element={<AdminDashboard />} />
-        <Route path="posts"           element={<AdminPosts />} />
-        <Route path="posts/new"       element={<AdminPostEditor />} />
-        <Route path="posts/edit/:id"  element={<AdminPostEditor />} />
-        <Route path="categories"      element={<AdminCategories />} />
-        <Route path="users"           element={<AdminUsers />} />
-        <Route path="requests"        element={<AdminRequests />} />
-        <Route path="theme"           element={<AdminTheme />} />
-        <Route path="settings"        element={<AdminSettings />} />
-        <Route path=""                element={<Navigate to="dashboard" replace />} />
-      </Route>
-      <Route path="/*" element={<PublicLayout />} />
-    </Routes>
+
+  {/* 🔐 ADMIN LOGIN */}
+  <Route path="/admin" element={<AdminLogin />} />
+
+  {/* 🔥 ADMIN PAGES */}
+  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+  <Route path="/admin/posts" element={<AdminPosts />} />
+  <Route path="/admin/posts/new" element={<AdminPostEditor />} />
+  <Route path="/admin/posts/edit/:id" element={<AdminPostEditor />} />
+  <Route path="/admin/categories" element={<AdminCategories />} />
+  <Route path="/admin/users" element={<AdminUsers />} />
+  <Route path="/admin/requests" element={<AdminRequests />} />
+  <Route path="/admin/theme" element={<AdminTheme />} />
+  <Route path="/admin/settings" element={<AdminSettings />} />
+
+</Routes>
   );
 }
