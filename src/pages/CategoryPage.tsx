@@ -1,16 +1,21 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getPosts, subscribeCategories } from "../lib/db";
+import { subscribePosts, subscribeCategories } from "../lib/db";
 
 export default function CategoryPage() {
-  const { id } = useParams(); // slug
+  const { id } = useParams();
+
   const [posts, setPosts] = useState<any[]>([]);
   const [cats, setCats] = useState<any[]>([]);
 
   useEffect(() => {
-    getPosts().then(setPosts);
-    const unsub = subscribeCategories(setCats);
-    return () => unsub();
+    const unsubPosts = subscribePosts(setPosts);
+    const unsubCats = subscribeCategories(setCats);
+
+    return () => {
+      unsubPosts();
+      unsubCats();
+    };
   }, []);
 
   const category = cats.find(
@@ -22,16 +27,20 @@ export default function CategoryPage() {
   );
 
   return (
-    <div>
-      <h1>{category?.name}</h1>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-2">
+        {category?.name || "Category"}
+      </h1>
 
-      <p>{filteredPosts.length} posts</p>
+      <p className="mb-4">{filteredPosts.length} posts</p>
 
       {filteredPosts.length === 0 ? (
-        <p>No posts</p>
+        <p>No posts in this category yet.</p>
       ) : (
         filteredPosts.map(p => (
-          <div key={p.id}>{p.title}</div>
+          <div key={p.id} className="mb-3">
+            {p.title}
+          </div>
         ))
       )}
     </div>
