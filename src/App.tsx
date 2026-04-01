@@ -9,6 +9,9 @@ import AdminRequests from "./pages/admin/AdminRequests";
 import AdminTheme from "./pages/admin/AdminTheme";
 import AdminSettings from "./pages/admin/AdminSettings";
 
+// 👉 ADD THIS (IMPORTANT)
+import PublicLayout from "./pages/PublicLayout";
+
 // 🔐 PROTECTED ROUTE
 function ProtectedRoute({ children }: any) {
   const isAuth = sessionStorage.getItem("jtrick_admin");
@@ -63,6 +66,9 @@ export default function App() {
       <Route path="/admin/settings" element={
         <ProtectedRoute><AdminSettings /></ProtectedRoute>
       } />
+
+      {/* 🌐 PUBLIC WEBSITE (IMPORTANT FIX) */}
+      <Route path="/*" element={<PublicLayout />} />
 
     </Routes>
   );
