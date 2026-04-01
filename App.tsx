@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import PostPage from "./pages/PostPage";
 import CategoryPage from "./pages/CategoryPage";
 import SearchPage from "./pages/SearchPage";
+
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -27,7 +28,10 @@ function PublicLayout() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center" style={{ background:"#0a0a0f" }}>
-      <div className="text-center"><div className="text-4xl mb-2 animate-pulse">⚡</div><p className="text-sm" style={{ color:"#555" }}>Loading...</p></div>
+      <div className="text-center">
+        <div className="text-4xl mb-2 animate-pulse">⚡</div>
+        <p className="text-sm" style={{ color:"#555" }}>Loading...</p>
+      </div>
     </div>
   );
 
@@ -35,9 +39,9 @@ function PublicLayout() {
     <div className="min-h-screen flex items-center justify-center" style={{ background:"var(--color-bg)" }}>
       <div className="text-center">
         <div className="text-6xl mb-4">🔧</div>
-        <h1 className="text-3xl font-black mb-2" style={{ fontFamily:"var(--font-display)", color:"var(--color-text)" }}>{settings.siteName}</h1>
-        <p className="mb-4" style={{ color:"var(--color-muted)" }}>We'll be back soon!</p>
-        <a href="/admin" className="text-sm underline" style={{ color:"var(--color-primary)" }}>Admin Login</a>
+        <h1 className="text-3xl font-black mb-2">{settings.siteName}</h1>
+        <p className="mb-4">We'll be back soon!</p>
+        <a href="/admin" className="underline">Admin Login</a>
       </div>
     </div>
   );
@@ -49,11 +53,13 @@ function PublicLayout() {
     <>
       <Navbar onRequest={() => setShowRequest(true)} />
       {showRequest && <RequestModal onClose={() => setShowRequest(false)} />}
+
+      {/* ✅ FIXED ROUTES */}
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/post/:id" element={<PostPage />} />
-        <Route path="/category/:id" element={<CategoryPage />} />
-        <Route path="/search" element={<SearchPage />} />
+        <Route index element={<HomePage />} />
+        <Route path="post/:id" element={<PostPage />} />
+        <Route path="category/:id" element={<CategoryPage />} />
+        <Route path="search" element={<SearchPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
@@ -63,20 +69,27 @@ function PublicLayout() {
 export default function App() {
   return (
     <Routes>
+
+      {/* 🔐 LOGIN */}
       <Route path="/admin" element={<AdminLogin />} />
+
+      {/* 🔥 ADMIN */}
       <Route path="/admin/*" element={<AdminLayout />}>
-        <Route path="dashboard"       element={<AdminDashboard />} />
-        <Route path="posts"           element={<AdminPosts />} />
-        <Route path="posts/new"       element={<AdminPostEditor />} />
-        <Route path="posts/edit/:id"  element={<AdminPostEditor />} />
-        <Route path="categories"      element={<AdminCategories />} />
-        <Route path="users"           element={<AdminUsers />} />
-        <Route path="requests"        element={<AdminRequests />} />
-        <Route path="theme"           element={<AdminTheme />} />
-        <Route path="settings"        element={<AdminSettings />} />
-        <Route path=""                element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="posts" element={<AdminPosts />} />
+        <Route path="posts/new" element={<AdminPostEditor />} />
+        <Route path="posts/edit/:id" element={<AdminPostEditor />} />
+        <Route path="categories" element={<AdminCategories />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="requests" element={<AdminRequests />} />
+        <Route path="theme" element={<AdminTheme />} />
+        <Route path="settings" element={<AdminSettings />} />
+        <Route index element={<Navigate to="dashboard" replace />} />
       </Route>
+
+      {/* 🌐 WEBSITE */}
       <Route path="/*" element={<PublicLayout />} />
+
     </Routes>
   );
 }
