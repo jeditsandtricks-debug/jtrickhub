@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import AdminLogin from "./pages/admin/AdminLogin";
 import { useState } from "react";
 import { useSettings } from "./context/SettingsContext";
 import { useUser } from "./context/UserContext";
@@ -64,7 +65,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/admin" element={<AdminLogin />} />
-      <Route path="/admin/*" element={<AdminLayout />}>
+      <Route path="/admin" element={<AdminLogin />} />
         <Route path="dashboard"       element={<AdminDashboard />} />
         <Route path="posts"           element={<AdminPosts />} />
         <Route path="posts/new"       element={<AdminPostEditor />} />
