@@ -1,7 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
-import { useSettings } from "./context/SettingsContext";
-import { useUser } from "./context/UserContext";
+import { useSettings } from ".
+/context
+/SettingsContext";
+import { useUser } from ".
+/context
+/UserContext";
 import { UserNameModal, BlockedScreen } from "./components/UserGate";
 import Navbar from "./components/Navbar";
 import RequestModal from "./components/RequestModal";
@@ -19,28 +23,30 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminRequests from "./pages/admin/AdminRequests";
 import AdminTheme from "./pages/admin/AdminTheme";
 import AdminSettings from "./pages/admin/AdminSettings";
-
 function PublicLayout() {
-  const { settings } = useSettings();
+  const { settings, loading } = useSettings();
   const { needsName, isBlocked } = useUser();
   const [showRequest, setShowRequest] = useState(false);
-
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background:"
+#0a0a0f" }}>
+      <div className="text-center"><div className="text-4xl mb-2 animate-pulse">⚡</div><p className="text-sm" style={{ color:"#555" }}>Loading...</p></div>
+    </div>
+  );
   if (settings.maintenanceMode) return (
-    <div style={{ minHeight:"100vh", background:"var(--color-bg)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <div style={{ textAlign:"center" }}>
-        <div style={{ fontSize:"4rem", marginBottom:"1rem" }}>🔧</div>
-        <h1 style={{ fontFamily:"var(--font-display)", color:"var(--color-text)", fontSize:"1.8rem", fontWeight:900 }}>{settings.siteName}</h1>
-        <p style={{ color:"var(--color-muted)", marginTop:"0.5rem" }}>We'll be back soon!</p>
-        <a href="/admin" style={{ color:"var(--color-primary)", marginTop:"1rem", display:"inline-block" }}>Admin Login</a>
+    <div className="min-h-screen flex items-center justify-center" style={{ background:"var(--color-bg)" }}>
+      <div className="text-center">
+        <div className="text-6xl mb-4">🔧</div>
+        <h1 className="text-3xl font-black mb-2" style={{ fontFamily:"var(--font-display)", color:"var(--color-text)" }}>{settings.siteName}</h1>
+        <p className="mb-4" style={{ color:"var(--color-muted)" }}>We'll be back soon!</p>
+        <a href="/admin" className="text-sm underline" style={{ color:"var(--color-primary)" }}>Admin Login</a>
       </div>
     </div>
   );
-
   if (isBlocked) return <BlockedScreen />;
-
+  if (settings.requireUserName && needsName) return <UserNameModal />;
   return (
     <>
-      {settings.requireUserName && needsName && <UserNameModal />}
       <Navbar onRequest={() => setShowRequest(true)} />
       {showRequest && <RequestModal onClose={() => setShowRequest(false)} />}
       <Routes>
@@ -53,29 +59,21 @@ function PublicLayout() {
     </>
   );
 }
-
 export default function App() {
   return (
     <Routes>
-      {/* Admin Login */}
-      <Route path="/admin" element={<AdminLogin />} />
-
-      {/* Admin Pages — wrapped in AdminLayout */}
-      <Route path="/admin/*" element={<AdminLayout />}>
-        <Route path="dashboard"      element={<AdminDashboard />} />
-        <Route path="posts"          element={<AdminPosts />} />
-        <Route path="posts/new"      element={<AdminPostEditor />} />
-        <Route path="posts/edit/:id" element={<AdminPostEditor />} />
-        <Route path="categories"     element={<AdminCategories />} />
-        <Route path="users"          element={<AdminUsers />} />
-        <Route path="requests"       element={<AdminRequests />} />
-        <Route path="theme"          element={<AdminTheme />} />
-        <Route path="settings"       element={<AdminSettings />} />
-        <Route path=""               element={<Navigate to="dashboard" replace />} />
-      </Route>
-
-      {/* Public site — ALL other routes */}
-      <Route path="/*" element={<PublicLayout />} />
-    </Routes>
+  {/* 🔐 ADMIN LOGIN */}
+  <Route path="/admin" element={<AdminLogin />} />
+  {/* 🔥 ADMIN PAGES */}
+  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+  <Route path="/admin/posts" element={<AdminPosts />} />
+  <Route path="/admin/posts/new" element={<AdminPostEditor />} />
+  <Route path="/admin/posts/edit/:id" element={<AdminPostEditor />} />
+  <Route path="/admin/categories" element={<AdminCategories />} />
+  <Route path="/admin/users" element={<AdminUsers />} />
+  <Route path="/admin/requests" element={<AdminRequests />} />
+  <Route path="/admin/theme" element={<AdminTheme />} />
+  <Route path="/admin/settings" element={<AdminSettings />} />
+</Routes>
   );
 }
